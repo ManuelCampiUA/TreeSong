@@ -28,7 +28,11 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "graphology": "^0.26.0",
+    "graphology-layout": "^0.6.1",
+    "graphology-layout-forceatlas2": "^0.10.1",
     "rxjs": "~7.8.0",
+    "sigma": "^3.0.2",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
