@@ -3,7 +3,7 @@ export interface Song {
     id: string;
     title: string;
     artist: string;
-    genre: string;
+    genres: string[];
     subgenre?: string;
     addedAt: Date;
 }
