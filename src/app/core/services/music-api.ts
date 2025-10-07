@@ -52,14 +52,13 @@ export class MusicApi {
    *   songs.forEach(s => console.log(s.title, s.genres));
    * });
    */
-  searchTracks(query: string, limit: number = 5): Observable<Song[]> {
+  searchTracks(query: string, limit: number = 10): Observable<Song[]> {
     return this.spotifyAuth.authenticate().pipe(
       switchMap(() => {
         const params = new HttpParams()
           .set('q', query)
           .set('type', 'track')
           .set('limit', limit.toString())
-          .set('market', 'IT');
 
         return this.http
           .get<SpotifySearchResponse>(`${this.API_BASE}/search`, { params })

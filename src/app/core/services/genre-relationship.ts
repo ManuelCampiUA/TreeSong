@@ -17,15 +17,10 @@ export class GenreRelationship {
    * @returns true se almeno una parola è contenuta nell'altra
    */
   hasMatch(genre1: string, genre2: string): boolean {
-    const words1 = genre1.toLowerCase().split(/[\s-]+/);
-    const words2 = genre2.toLowerCase().split(/[\s-]+/);
+    const words1 = genre1.toLowerCase();
+    const words2 = genre2.toLowerCase();
 
-    // Controlla se almeno una parola di genre1 è in genre2
-    return words1.some(word1 => 
-      words2.some(word2 => 
-        word1.includes(word2) || word2.includes(word1)
-      )
-    );
+    return words1.includes(words2) || words2.includes(words1);
   }
 
   /**
@@ -36,8 +31,8 @@ export class GenreRelationship {
    * @returns Numero di parole in comune (per future feature di "peso")
    */
   getMatchScore(genre1: string, genre2: string): number {
-    const words1 = genre1.toLowerCase().split(/[\s-]+/);
-    const words2 = genre2.toLowerCase().split(/[\s-]+/);
+    const words1 = genre1.toLowerCase().split(' ');
+    const words2 = genre2.toLowerCase().split(' ');
 
     let score = 0;
     words1.forEach(word1 => {

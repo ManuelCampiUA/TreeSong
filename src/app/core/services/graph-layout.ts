@@ -49,7 +49,6 @@ import { GraphNode } from '../models/models';
     canvasWidth: number = 800, 
     canvasHeight: number = 600
   ): GraphNode[] {
-    
     if (nodes.length === 0) {
       return [];
     }
