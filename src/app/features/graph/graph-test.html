@@ -1,0 +1,192 @@
+<!-- src/app/features/graph-test/graph-test.component.html -->
+
+<div class="graph-test-container">
+  
+  <!-- HEADER -->
+  <header class="header">
+    <h1>🎵 TreeSong - Graph Test</h1>
+    <p>Search songs, add to collection, test genre connections</p>
+  </header>
+
+  <!-- SEARCH SECTION -->
+  <section class="search-section">
+    <h2>Search Spotify</h2>
+    
+    <div class="search-bar">
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+        placeholder="Search for a song or artist..."
+        [disabled]="isSearching()"
+        class="search-input"
+      >
+      
+      <button 
+        (click)="onSearch()"
+        [disabled]="isSearching() || !searchQuery()"
+        class="btn btn-primary"
+      >
+        {{ isSearching() ? 'Searching...' : 'Search' }}
+      </button>
+
+      @if (hasResults()) {
+        <button 
+          (click)="onClearSearch()"
+          class="btn btn-secondary"
+        >
+          Clear
+        </button>
+      }
+    </div>
+
+    <!-- Error Message -->
+    @if (errorMessage()) {
+      <div class="error-message">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <!-- Search Results -->
+    @if (hasResults()) {
+      <div class="results-container">
+        <h3>Results ({{ searchResults().length }})</h3>
+        
+        <ul class="song-list">
+          @for (song of searchResults(); track song.id) {
+            <li class="song-item">
+              <div class="song-info">
+                <strong>{{ song.title }}</strong>
+                <span class="artist">by {{ song.artist }}</span>
+                <div class="genres">
+                  @for (genre of song.genres; track genre) {
+                    <span class="genre-badge">{{ genre }}</span>
+                  }
+                </div>
+              </div>
+              
+              <button 
+                (click)="onAddSong(song)"
+                class="btn btn-small btn-success"
+              >
+                + Add
+              </button>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </section>
+
+  <!-- COLLECTION SECTION -->
+  <section class="collection-section">
+    <div class="section-header">
+      <h2>Your Collection ({{ songCount() }})</h2>
+      
+      @if (hasSongs()) {
+        <div class="actions">
+          <button 
+            (click)="onCalculateLayout()"
+            class="btn btn-primary"
+          >
+            📊 Calculate Layout
+          </button>
+          
+          <button 
+            (click)="onClearAll()"
+            class="btn btn-danger"
+          >
+            🗑️ Clear All
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (!hasSongs()) {
+      <div class="empty-state">
+        <p>No songs yet. Search and add some!</p>
+      </div>
+    } @else {
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-card">
+          <span class="stat-value">{{ songCount() }}</span>
+          <span class="stat-label">Songs</span>
+        </div>
+        
+        <div class="stat-card">
+          <span class="stat-value">{{ connectionStats().totalConnections }}</span>
+          <span class="stat-label">Connections</span>
+        </div>
+        
+        <div class="stat-card">
+          <span class="stat-value">{{ connectionStats().avgConnectionsPerSong }}</span>
+          <span class="stat-label">Avg/Song</span>
+        </div>
+        
+        <div class="stat-card">
+          <span class="stat-value">{{ allGenres().length }}</span>
+          <span class="stat-label">Genres</span>
+        </div>
+      </div>
+
+      <!-- All Genres -->
+      <div class="genres-overview">
+        <h4>All Genres:</h4>
+        <div class="genre-tags">
+          @for (genre of allGenres(); track genre) {
+            <span class="genre-tag">{{ genre }}</span>
+          }
+        </div>
+      </div>
+
+      <!-- Song List with Connections -->
+      <ul class="collection-list">
+        @for (song of allSongs(); track song.id) {
+          <li class="collection-item">
+            <div class="song-main">
+              <div class="song-details">
+                <strong>{{ song.title }}</strong>
+                <span class="artist">{{ song.artist }}</span>
+                
+                <div class="song-genres">
+                  @for (genre of song.genres; track genre) {
+                    <span class="genre-badge small">{{ genre }}</span>
+                  }
+                </div>
+              </div>
+
+              <button 
+                (click)="onRemoveSong(song.id)"
+                class="btn btn-small btn-danger"
+              >
+                Remove
+              </button>
+            </div>
+
+            <!-- Connections -->
+            @if (getConnectedSongs(song.id).length > 0) {
+              <div class="connections">
+                <span class="connections-label">
+                  🔗 Connected to {{ getConnectedSongs(song.id).length }} songs:
+                </span>
+                
+                <ul class="connected-list">
+                  @for (connected of getConnectedSongs(song.id); track connected.id) {
+                    <li class="connected-item">
+                      {{ connected.title }}
+                    </li>
+                  }
+                </ul>
+              </div>
+            } @else {
+              <div class="no-connections">
+                ⚠️ No connections (no matching genres)
+              </div>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</div>
